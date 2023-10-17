@@ -14,6 +14,9 @@ raw_videos_folder_path = script_path / raw_videos_relative_path
 encoded_videos_folder_path = script_path / encoded_videos_relative_path
 decoded_videos_folder_path = script_path / decoded_videos_relative_path
 
+# Define path to the VMAF model (change to your actual path)
+vmaf_model_path = "/path/to/model/vmaf_v0.6.1.pkl"
+
 # List of codecs to test
 codecs = ['mjpeg', 'libx264', 'libx265']
 

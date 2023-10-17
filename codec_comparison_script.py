@@ -48,5 +48,5 @@ for video_file in os.listdir(raw_videos_folder_path):
             subprocess.run(['ffmpeg', '-i', str(input_path), '-c:v', codec, str(encoded_path)])
 
             # Decoding
-            decoded_path = decoded_videos_folder_path / f'{video_file}_decoded_{codec}.mp4'
+            decoded_path = decoded_videos_folder_path / f'{video_name}_decoded_{codec}.mp4'
             subprocess.run(['ffmpeg', '-i', str(encoded_path), '-c:v', codec, str(decoded_path)])
