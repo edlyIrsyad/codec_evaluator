@@ -26,5 +26,5 @@ for original_video_file in os.listdir(original_videos_folder_path):
         print("-" * 50)
 
         # Rawification
-        raw_video_file_path = raw_videos_folder_path / f'{original_video_name}_encoded_raw.avi'
+        raw_video_file_path = raw_videos_folder_path / f'{original_video_name}_raw.avi'
         subprocess.run(['ffmpeg', '-i', str(original_video_file_path), '-c:v', 'rawvideo', str(raw_video_file_path)])
