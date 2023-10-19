@@ -23,7 +23,7 @@ codecs = ['mjpeg', 'libx264', 'libx265']
 
 # Prepare CSV file
 with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
-    fieldnames = ['Name of original video', 'Compression Codec', 'Original raw file size', 'Encoded file size', 'Change in file size', 'PSNR', 'SSIM', 'VMAF']
+    fieldnames = ['Name of original video', 'Compression Codec', 'Encoding time', 'Decoding time', 'CPU usage', 'Original raw file size', 'Encoded file size', 'Change in file size', 'PSNR', 'SSIM', 'VMAF']
     writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
     writer.writeheader()
 
@@ -72,13 +72,13 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                 #     'VMAF': vmaf_value
                 # })
 
-                writer.writerow({
-                    'Name of original video': raw_video_name,
-                    'Compression Codec': codec,
-                    'Original raw file size': raw_video_file_size,
-                    'Encoded file size': encoded_video_file_size,
-                    'Change in file size': encoded_video_file_size - raw_video_file_size,
-                    'PSNR': 54,
-                    'SSIM': 76,
-                    'VMAF': 324
-                })
+                # writer.writerow({
+                #     'Name of original video': raw_video_name,
+                #     'Compression Codec': codec,
+                #     'Original raw file size': raw_video_file_size,
+                #     'Encoded file size': encoded_video_file_size,
+                #     'Change in file size': encoded_video_file_size - raw_video_file_size,
+                #     'PSNR': 54,
+                #     'SSIM': 76,
+                #     'VMAF': 324
+                # })
