@@ -24,11 +24,12 @@ encoded_videos_folder_path = current_path / encoded_videos_relative_path
 decoded_videos_folder_path = current_path / decoded_videos_relative_path
 
 # List of codecs to test
-codecs = ['mjpeg', 'libx264', 'libx265']
-# codecs = ['mjpeg', 'libx264']
+# codecs = ['mjpeg', 'libx264', 'libx265']
+codecs = ['mjpeg', 'libx264']
 
 # Video resolutions
 video_resolutions = {}
+video_frame_rates = {}
 
 def get_video_resolution(video_path):
     cmd = ['ffmpeg', '-i', video_path]
@@ -83,7 +84,10 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
             raw_video_file_path = raw_videos_folder_path / raw_video_file
 
             video_resolutions[raw_video_name] = get_video_resolution(raw_video_file_path)
+            video_frame_rates[raw_video_name] = get_frame_rate(raw_video_file_path)
+
             raw_video_file_size = os.path.getsize(raw_video_file_path)
+            raw_video_file_size_gb = round(raw_video_file_size / (2**30), 3)
 
             print("-" * 50)
             print("-" * 50)
@@ -100,18 +104,34 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                 # subprocess.run(['ffmpeg', '-i', str(input_path), '-r', get_frame_rate(input_path), '-s', video_resolutions[video_name], '-c:v', codec, '-pix_fmt', get_pixel_format(input_path), str(encoded_path)])
                 start_time_encode = time.time()
                 subprocess.run(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)])
+                # encoding_process = subprocess.Popen(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 end_time_encode = time.time()
+
+                # encoding_pid = encoding_process.pid
+                # encoding_psutil_process = psutil.Process(encoding_pid)
+
+                # cpu_usages = []
+
+                # # Step 2: Continuously measure the CPU usage during the encoding process
+                # while encoding_process.poll() is None:  # While the process is running
+                #     cpu_usages.append(encoding_psutil_process.cpu_percent(interval=0.2))  # Measure the CPU usage every second
+
+                # # Step 3: Finish when the encoding process is complete
+                # _, _ = encoding_process.communicate()
+
+                # average_cpu_usage = sum(cpu_usages) / len(cpu_usages)
 
                 # Calculate size of encoded video file
                 encoded_video_file_size = os.path.getsize(encoded_video_file_path)
+                encoded_video_file_size_gb = round(encoded_video_file_size / (2**30), 3)
 
                 # Decoding
-                decoded_video_file_path = decoded_videos_folder_path / f'{raw_video_name}_decoded_{codec}.avi'
+                decoded_video_file_path = decoded_videos_folder_path / f'{raw_video_name}_decoded_{codec}.yuv'
                 print("-" * 50)
                 print(codec)
                 # subprocess.run(['ffmpeg', '-i', str(encoded_path), '-r', get_frame_rate(input_path), '-s', video_resolutions[video_name], '-c:v', codec, '-pix_fmt', get_pixel_format(input_path), str(decoded_path)])
                 start_time_decode = time.time()
-                subprocess.run(['ffmpeg', '-i', str(encoded_video_file_path), '-c:v', 'rawvideo', str(decoded_video_file_path)])
+                subprocess.run(['ffmpeg', '-i', str(encoded_video_file_path), "-s", video_resolutions[raw_video_name], '-c:v', 'rawvideo', '-r', video_frame_rates[raw_video_name], '-pix_fmt', 'yuv420p', str(decoded_video_file_path)])
                 end_time_decode = time.time()
 
                 encoding_time = end_time_encode - start_time_encode
@@ -119,7 +139,7 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
 
                 # Capturing CPU and memory utilization
                 process = psutil.Process(os.getpid())
-                cpu_usage = process.cpu_percent(interval=1)
+                cpu_usage = process.cpu_percent(interval=0.2)
                 mem_usage = process.memory_info().rss / (1024 * 1024)  # in MB
 
                 results_csv.writerow({
@@ -129,10 +149,12 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                     'Decoding time': decoding_time,
                     'CPU usage': cpu_usage,
                     'Memory usage': mem_usage,
-                    'Original raw file size': raw_video_file_size,
-                    'Encoded file size': encoded_video_file_size,
-                    'Change in file size': encoded_video_file_size - raw_video_file_size
+                    'Original raw file size': raw_video_file_size_gb,
+                    'Encoded file size': encoded_video_file_size_gb,
+                    'Change in file size': round(encoded_video_file_size_gb - raw_video_file_size_gb, 3)
                 })
+
+
 
 # print()
 # print('Raw videos folder path: ')
