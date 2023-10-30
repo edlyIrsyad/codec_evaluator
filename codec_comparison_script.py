@@ -6,6 +6,7 @@ import re
 import time
 import csv
 import psutil
+import threading
 
 # sys.stdout = open('output.txt', 'w')
 # print("This will be written to output.txt")
@@ -103,23 +104,28 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                 print(codec)
                 # subprocess.run(['ffmpeg', '-i', str(input_path), '-r', get_frame_rate(input_path), '-s', video_resolutions[video_name], '-c:v', codec, '-pix_fmt', get_pixel_format(input_path), str(encoded_path)])
                 start_time_encode = time.time()
-                subprocess.run(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)])
-                # encoding_process = subprocess.Popen(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                # subprocess.run(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)])
+                encoding_process = subprocess.Popen(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 end_time_encode = time.time()
 
-                # encoding_pid = encoding_process.pid
-                # encoding_psutil_process = psutil.Process(encoding_pid)
+                # Get PID of the encoding process
+                encoding_pid = encoding_process.pid
+                encoding_psutil_process = psutil.Process(encoding_pid)
 
-                # cpu_usages = []
+                # List to collect CPU usage and memory usage (RSS) over time
+                cpu_usages = []
+                mem_usages = []
 
-                # # Step 2: Continuously measure the CPU usage during the encoding process
-                # while encoding_process.poll() is None:  # While the process is running
-                #     cpu_usages.append(encoding_psutil_process.cpu_percent(interval=0.2))  # Measure the CPU usage every second
+                # Continuously measure the CPU usage during the encoding process
+                while encoding_process.poll() is None:  # While the process is running
+                    cpu_usages.append(encoding_psutil_process.cpu_percent(interval=0.2))  # Measure the CPU usage every second
+                    mem_usages.append(encoding_psutil_process.memory_info().rss / (1024 ** 2))  # Get RSS in MB
 
-                # # Step 3: Finish when the encoding process is complete
-                # _, _ = encoding_process.communicate()
+                # Finish when the encoding process is complete
+                _, _ = encoding_process.communicate()
 
-                # average_cpu_usage = sum(cpu_usages) / len(cpu_usages)
+                ave_cpu_usage = sum(cpu_usages) / len(cpu_usages)
+                ave_mem_usage = sum(mem_usages) / len(mem_usages)
 
                 # Calculate size of encoded video file
                 encoded_video_file_size = os.path.getsize(encoded_video_file_path)
@@ -147,15 +153,16 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                     'Compression Codec': codec,
                     'Encoding time': encoding_time,
                     'Decoding time': decoding_time,
-                    'CPU usage': cpu_usage,
-                    'Memory usage': mem_usage,
+                    'CPU usage': ave_cpu_usage,
+                    'Memory usage': ave_mem_usage,
                     'Original raw file size': raw_video_file_size_gb,
                     'Encoded file size': encoded_video_file_size_gb,
-                    'Change in file size': round(encoded_video_file_size_gb - raw_video_file_size_gb, 3)
-                })
-
-
-
+                    'Change in file size': round(encoded_video_file_size_gb - raw_video_file_size_gb, 3),
+                    'PSNR': 54,
+                    'SSIN': 63,
+                    'VMAF': 7845
+                    })
+                
 # print()
 # print('Raw videos folder path: ')
 # print(raw_videos_folder_path)
