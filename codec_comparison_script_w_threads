@@ -27,7 +27,7 @@ decoded_videos_folder_path = current_path / decoded_videos_relative_path
 # Lists
 # codecs = ['mjpeg', 'libx264', 'libx265']
 codecs = ['mjpeg', 'libx264']
-col_names = ['Name of original video', 'Compression Codec', 'Encoding time', 'Decoding time', 'CPU usage', 'Memory usage', 'Original raw file size', 'Encoded file size', 'Change in file size', 'PSNR', 'SSIM', 'VMAF']
+col_names = ['Name of original video', 'Compression Codec', 'Encoding time', 'CPU usage', 'Memory usage', 'Original raw file size', 'Encoded file size', 'Change in file size', 'PSNR', 'SSIM', 'VMAF']
 
 # Video resolutions
 video_resolutions = {}
