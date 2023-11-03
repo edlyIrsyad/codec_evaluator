@@ -221,9 +221,20 @@ codecs = ['mjpeg', 'libx264']
 def encode(stop_event, raw_video_file_path, codec, encoded_video_file_path, encoding_pid_value):
     print("-" * 150 + "\n" + "Commencing encoding..." + "\n" + "-" * 150)
     print("-" * 50 + "\n" + codec + "\n" + "-" * 50)
+    start_time_encode = time.time()
     encoding_process = subprocess.Popen(['ffmpeg', '-i', str(raw_video_file_path), '-c:v', codec, str(encoded_video_file_path)])
     encoding_pid_value.value = encoding_process.pid
     encoding_process.wait()
+    end_time_encode = time.time()
+    file_exists = os.path.isfile("video_quality_metrics.csv")
+    with open('video_quality_metrics.csv', 'a', newline='') as csvfile:
+        writer2 = csv.writer(csvfile)
+        if not file_exists:
+            writer2.writerow(['Name of original video', 'Compression Codec', 'Encoding time', 'CPU usage', 'Memory usage', 'Original raw file size', 'Encoded file size', 'Change in file size', 'PSNR', 'SSIM', 'VMAF'])
+
+        encoding_time = end_time_encode - start_time_encode
+        writer2.writerow(['', '', encoding_time, '', '', '', '', '', '', '', ''])
+
     print("-" * 150 + "\n" + str(encoding_pid_value.value) + "\n" + "-" * 150)
     print("-" * 150 + "\n" + "Encoding completed." + "\n" + "-" * 150)
     # encoding_process.communicate()
