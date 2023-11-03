@@ -16,6 +16,9 @@ raw_videos_folder_path = current_path / raw_videos_relative_path
 encoded_videos_folder_path = current_path / encoded_videos_relative_path
 decoded_videos_folder_path = current_path / decoded_videos_relative_path
 
+# Define path to the VMAF model (change to your actual path)
+vmaf_model_path = "C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl"
+
 # Lists
 # codecs = ['mjpeg', 'libx264', 'libx265']
 codecs = ['mjpeg', 'libx264']
@@ -52,6 +55,26 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
 
                 # Decoding
                 decoded_video_file_path = decoded_videos_folder_path / f'{raw_video_name}_decoded_{codec}.yuv'
-                subprocess.run(['ffmpeg', '-i', str(encoded_video_file_path), '-c:v', 'rawvideo', '-pix_fmt', 'yuv420p', str(decoded_video_file_path)])
+                # subprocess.run(['ffmpeg', '-i', str(encoded_video_file_path), '-c:v', 'rawvideo', '-pix_fmt', 'yuv420p', str(decoded_video_file_path)])
 
-                writer2.writerow([raw_video_name, codec, '', '', '', raw_video_file_size_gb, encoded_video_file_size_gb, change_file_size_gb, '', '', ''])
+                # Metrics Calculation
+                # terminal_input = [
+                #     "ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, 
+                #     "-filter_complex",
+                #     f"psnr;ssim;libvmaf=model_path={vmaf_model_path}",
+                #     "-an", "-f", "null", "-"
+                # ]
+                
+                psnr_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "psnr", "-f", "null", "-"]
+                ssim_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "ssim", "-f", "null", "-"]
+                vmaf_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", f'libvmaf="model_path=C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl"', "-f", "null", "-"]
+                
+                psnr_result = subprocess.run(psnr_cmd, capture_output=True, text=True)
+                ssim_result = subprocess.run(ssim_cmd, capture_output=True, text=True)
+                vmaf_result = subprocess.run(vmaf_cmd, capture_output=True, text=True)
+
+                psnr_value = psnr_result.stderr.split('\n')
+                ssim_value = ssim_result.stderr.split('\n')
+                vmaf_value = vmaf_result.stderr.split('\n')
+
+                writer2.writerow([raw_video_name, codec, '', '', '', raw_video_file_size_gb, encoded_video_file_size_gb, change_file_size_gb, psnr_value, ssim_value, vmaf_value])
