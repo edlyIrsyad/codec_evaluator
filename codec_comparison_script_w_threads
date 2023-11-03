@@ -88,7 +88,7 @@ def monitor_resource_usage():
 
 if __name__ == "__main__":
     stop_event = Event()
-    
+
     # Prepare CSV file
     with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
         results_csv = csv.DictWriter(csvfile, fieldnames=col_names)
