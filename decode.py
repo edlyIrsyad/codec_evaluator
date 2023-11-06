@@ -66,15 +66,17 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                 # ]
                 
                 psnr_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "psnr", "-f", "null", "-"]
-                ssim_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "ssim", "-f", "null", "-"]
-                vmaf_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", f'libvmaf="model_path=C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl"', "-f", "null", "-"]
+                # ssim_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "ssim", "-f", "null", "-"]
+                # vmaf_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", f'libvmaf="model_path=C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl"', "-f", "null", "-"]
                 
                 psnr_result = subprocess.run(psnr_cmd, capture_output=True, text=True)
-                ssim_result = subprocess.run(ssim_cmd, capture_output=True, text=True)
-                vmaf_result = subprocess.run(vmaf_cmd, capture_output=True, text=True)
+                # ssim_result = subprocess.run(ssim_cmd, capture_output=True, text=True)
+                # vmaf_result = subprocess.run(vmaf_cmd, capture_output=True, text=True)
 
-                psnr_value = psnr_result.stderr.split('\n')
-                ssim_value = ssim_result.stderr.split('\n')
-                vmaf_value = vmaf_result.stderr.split('\n')
+                psnr_value = psnr_result.stderr.split('\n')[-2]
+                # ssim_value = ssim_result.stderr.split('\n')
+                # vmaf_value = vmaf_result.stderr.split('\n')
+                ssim_value = 1
+                vmaf_value = 2
 
                 writer2.writerow([raw_video_name, codec, '', '', '', raw_video_file_size_gb, encoded_video_file_size_gb, change_file_size_gb, psnr_value, ssim_value, vmaf_value])
