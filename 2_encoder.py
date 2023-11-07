@@ -105,7 +105,7 @@ if __name__ == "__main__":
 
                 print("PID = " + str(encoding_pid_value.value))
 
-                monitoring_process = Process(target=monitor_usage, args=(stop_event, raw_video_name, codec, "1_data_from_encoding.csv", encoding_pid_value.value))
+                monitoring_process = Process(target=monitor_usage, args=(stop_event, raw_video_name, codec, "data_from_encoding.csv", encoding_pid_value.value))
                 monitoring_process.start()
                 
                 # Wait for encoding to finish (replace with your condition)
