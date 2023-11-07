@@ -1,10 +1,13 @@
+"""
+This script does the following:
+1) Take videos from the folder '0_original_videos'
+2) Convert them to raw format
+3) Save them in the folder '1_raw_videos'
+"""
+
 import os
 import subprocess
 from pathlib import Path
-import sys
-import re
-import time
-import csv
 
 original_videos_relative_path = 'videos/0_original_videos'
 raw_videos_relative_path = 'videos/1_raw_videos'
