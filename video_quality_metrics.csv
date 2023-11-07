@@ -1,8 +1,8 @@
-kaaholmen_merd6_2018_11_28_17_00_01,mjpeg,,,,1.086,0.02,1.066,Error opening input files: Invalid argument,1,2
-kaaholmen_merd6_2018_11_28_17_00_01,libx264,,,,1.086,0.017,1.0690000000000002,Error opening input files: Invalid argument,1,2
-pexels-kindel-media-8823187 (2160p),mjpeg,,,,2.352,0.025,2.327,Error opening input files: Invalid argument,1,2
-pexels-kindel-media-8823187 (2160p),libx264,,,,2.352,0.023,2.3289999999999997,Error opening input files: Invalid argument,1,2
-pexels-kindel-media-8823454 (2160p),mjpeg,,,,4.056,0.039,4.017,Error opening input files: Invalid argument,1,2
-pexels-kindel-media-8823454 (2160p),libx264,,,,4.056,0.037,4.019,Error opening input files: Invalid argument,1,2
-pexels-taryn-elliott-5548361 (2160p),mjpeg,,,,2.897,0.035,2.8619999999999997,Error opening input files: Invalid argument,1,2
-pexels-taryn-elliott-5548361 (2160p),libx264,,,,2.897,0.021,2.876,Error opening input files: Invalid argument,1,2
+kaaholmen_merd6_2018_11_28_17_00_01,mjpeg,,,,1.086,0.02,1.066,34.110269,0.945183,[Parsed_libvmaf_0 @ 00000274320ffa40] VMAF score: 74.664013
+kaaholmen_merd6_2018_11_28_17_00_01,libx264,,,,1.086,0.017,1.0690000000000002,20.261168,0.767859,[Parsed_libvmaf_0 @ 0000013a8a41f300] VMAF score: 9.238465
+pexels-kindel-media-8823187 (2160p),mjpeg,,,,2.352,0.025,2.327,22.930698,0.88862,[Parsed_libvmaf_0 @ 000002648da59e40] VMAF score: 1.144184
+pexels-kindel-media-8823187 (2160p),libx264,,,,2.352,0.023,2.3289999999999997,21.48601,0.878662,[Parsed_libvmaf_0 @ 000002c9e960a780] VMAF score: 0.886292
+pexels-kindel-media-8823454 (2160p),mjpeg,,,,4.056,0.039,4.017,29.402058,0.912924,[Parsed_libvmaf_0 @ 000002522740e140] VMAF score: 2.836061
+pexels-kindel-media-8823454 (2160p),libx264,,,,4.056,0.037,4.019,27.313424,0.906171,[Parsed_libvmaf_0 @ 0000011bde3000c0] VMAF score: 2.163791
+pexels-taryn-elliott-5548361 (2160p),mjpeg,,,,2.897,0.035,2.8619999999999997,41.621816,0.959579,[Parsed_libvmaf_0 @ 000001faf95dd880] VMAF score: 75.688307
+pexels-taryn-elliott-5548361 (2160p),libx264,,,,2.897,0.021,2.876,28.574084,0.887923,[Parsed_libvmaf_0 @ 00000269460ced00] VMAF score: 5.970075

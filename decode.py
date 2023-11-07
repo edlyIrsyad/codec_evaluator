@@ -2,6 +2,7 @@ import os
 import subprocess
 from pathlib import Path
 import csv
+import re
 
 original_videos_relative_path = 'videos/0_original_videos'
 raw_videos_relative_path = 'videos/1_raw_videos'
@@ -23,6 +24,17 @@ vmaf_model_path = "C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl"
 # codecs = ['mjpeg', 'libx264', 'libx265']
 codecs = ['mjpeg', 'libx264']
 col_names = ['Name of original video', 'Compression Codec', 'Encoding time', 'CPU usage', 'Memory usage', 'Original raw file size', 'Encoded file size', 'Change in file size', 'PSNR', 'SSIM', 'VMAF']
+
+def average_value_extractor(cmd_line_output):
+    if "PSNR" in cmd_line_output:
+        match = re.search(r'average:(\d+\.\d+)', cmd_line_output)
+    elif "SSIM" in cmd_line_output:
+        match = re.search(r'All:(\d+\.\d+)', cmd_line_output)
+
+    if match:
+        ave_value_float = match.group(1)  # This is a string
+        ave_value_str = float(ave_value_float)  # Convert to float
+        return ave_value_str
 
 # Prepare CSV file
 file_exists = os.path.isfile("video_quality_metrics.csv")
@@ -54,7 +66,7 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                 change_file_size_gb = raw_video_file_size_gb - encoded_video_file_size_gb
 
                 # Decoding
-                decoded_video_file_path = decoded_videos_folder_path / f'{raw_video_name}_decoded_{codec}.yuv'
+                decoded_video_file_path = decoded_videos_folder_path / f'{raw_video_name}_decoded_{codec}.avi'
                 # subprocess.run(['ffmpeg', '-i', str(encoded_video_file_path), '-c:v', 'rawvideo', '-pix_fmt', 'yuv420p', str(decoded_video_file_path)])
 
                 # Metrics Calculation
@@ -66,17 +78,74 @@ with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
                 # ]
                 
                 psnr_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "psnr", "-f", "null", "-"]
-                # ssim_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "ssim", "-f", "null", "-"]
+                ssim_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", "ssim", "-f", "null", "-"]
                 # vmaf_cmd = ["ffmpeg", "-i", raw_video_file_path, "-i", decoded_video_file_path, "-lavfi", f'libvmaf="model_path=C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl"', "-f", "null", "-"]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", raw_video_file_path,
+                #     "-i", decoded_video_file_path,
+                #     "-lavfi", "libvmaf=model=path='C\\:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl'",
+                #     "-f", "null", "-"
+                # ]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", raw_video_file_path,
+                #     "-i", decoded_video_file_path,
+                #     "-lavfi", r"libvmaf=model_path='C:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl'",
+                #     "-f", "null", "-"
+                # ]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", raw_video_file_path,
+                #     "-i", decoded_video_file_path,
+                #     "-lavfi", "libvmaf=model_path='C\:/Users/simen/Desktop/vmaf_float_v0.6.1.pkl'",
+                #     "-f", "null", "-"
+                # ]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", decoded_video_file_path,
+                #     "-i", raw_video_file_path,
+                #     "-lavfi", "libvmaf='model=version=vmaf_float_v0.6.1'",
+                #     "-f", "null", "-"
+                # ]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", decoded_video_file_path,
+                #     "-i", raw_video_file_path,
+                #     "-lavfi", "libvmaf='model=version=vmaf_v0.6.1'",
+                #     "-f", "null", "-"
+                # ]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", decoded_video_file_path,
+                #     "-i", raw_video_file_path,
+                #     "-lavfi", "libvmaf=model_path='C\\:/Users/simen/Desktop/vmaf_v0.6.1.json'",
+                #     "-f", "null", "-"
+                # ]
+                # vmaf_cmd = [
+                #     "ffmpeg",
+                #     "-i", decoded_video_file_path,
+                #     "-i", raw_video_file_path,
+                #     "-lavfi", "libvmaf=model_path='C\\:/Users/simen/Desktop/vmaf_4k_v0.6.1.json'",
+                #     "-f", "null", "-"
+                # ]
+                vmaf_cmd = [
+                    "ffmpeg",
+                    "-i", decoded_video_file_path,
+                    "-i", raw_video_file_path,
+                    "-filter_complex", "libvmaf",
+                    "-f", "null", "-"
+                ]
                 
                 psnr_result = subprocess.run(psnr_cmd, capture_output=True, text=True)
-                # ssim_result = subprocess.run(ssim_cmd, capture_output=True, text=True)
-                # vmaf_result = subprocess.run(vmaf_cmd, capture_output=True, text=True)
+                ssim_result = subprocess.run(ssim_cmd, capture_output=True, text=True)
+                vmaf_result = subprocess.run(vmaf_cmd, capture_output=True, text=True)
 
-                psnr_value = psnr_result.stderr.split('\n')[-2]
-                # ssim_value = ssim_result.stderr.split('\n')
-                # vmaf_value = vmaf_result.stderr.split('\n')
-                ssim_value = 1
-                vmaf_value = 2
+                psnr_value = average_value_extractor(psnr_result.stderr.split('\n')[-2])
+                # ssim_value = ssim_result.stderr.split('\n')[-2]
+                ssim_value = average_value_extractor(ssim_result.stderr.split('\n')[-2])
+                vmaf_value = vmaf_result.stderr.split('\n')[-2]
+                # ssim_value = 1
+                # vmaf_value = 2
 
                 writer2.writerow([raw_video_name, codec, '', '', '', raw_video_file_size_gb, encoded_video_file_size_gb, change_file_size_gb, psnr_value, ssim_value, vmaf_value])
