@@ -1,0 +1,11 @@
+Name of original video,Compression Codec,Encoding time,CPU usage,Memory usage,Original raw file size,Encoded file size,Change in file size,PSNR,SSIM,VMAF
+kaaholmen_merd6_2018_11_28_17_00_01,mjpeg,,,,1.086,0.02,1.066,34.110269,0.945183,[Parsed_libvmaf_0 @ 0000012b97981980] VMAF score: 74.664013
+kaaholmen_merd6_2018_11_28_17_00_01,libx264,,,,1.086,0.017,1.0690000000000002,20.261168,0.767859,[Parsed_libvmaf_0 @ 0000024ac4a00940] VMAF score: 9.238465
+kaaholmen_merd6_2018_11_28_17_00_01_VGA,mjpeg,,,,0.161,0.005,0.156,31.672828,0.922059,[Parsed_libvmaf_0 @ 000002eb80517380] VMAF score: 72.076255
+kaaholmen_merd6_2018_11_28_17_00_01_VGA,libx264,,,,0.161,0.004,0.157,20.469385,0.739585,[Parsed_libvmaf_0 @ 000001e4e5272e00] VMAF score: 15.215031
+pexels-kindel-media-8823187 (2160p),mjpeg,,,,2.352,0.025,2.327,22.930698,0.88862,[Parsed_libvmaf_0 @ 0000016c32e5a640] VMAF score: 1.144184
+pexels-kindel-media-8823187 (2160p),libx264,,,,2.352,0.023,2.3289999999999997,21.48601,0.878662,[Parsed_libvmaf_0 @ 000001f1b176b580] VMAF score: 0.886292
+pexels-kindel-media-8823454 (2160p),mjpeg,,,,4.056,0.039,4.017,29.402058,0.912924,[Parsed_libvmaf_0 @ 0000025a574cdf40] VMAF score: 2.836061
+pexels-kindel-media-8823454 (2160p),libx264,,,,4.056,0.037,4.019,27.313424,0.906171,[Parsed_libvmaf_0 @ 000002ab369702c0] VMAF score: 2.163791
+pexels-taryn-elliott-5548361 (2160p),mjpeg,,,,2.897,0.035,2.8619999999999997,41.621816,0.959579,[Parsed_libvmaf_0 @ 000002c51cb41980] VMAF score: 75.688307
+pexels-taryn-elliott-5548361 (2160p),libx264,,,,2.897,0.021,2.876,28.574084,0.887923,[Parsed_libvmaf_0 @ 0000022dcbbbe140] VMAF score: 5.970075

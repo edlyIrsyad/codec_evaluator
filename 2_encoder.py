@@ -75,7 +75,7 @@ def monitor_usage(stop_event, raw_video_name, codec, csv_file_path, pid):
             memory_usage_mb = encoding_process.memory_info().rss / (2**20)
             
             writer.writerow([raw_video_name, codec, timestamp, cpu_usage, memory_usage_mb])
-            time.sleep(0.2)
+            time.sleep(0.1)
 
     print("å" * 150 + "\n" + "Monitoring complete." + "\n" + "å" * 150)
 

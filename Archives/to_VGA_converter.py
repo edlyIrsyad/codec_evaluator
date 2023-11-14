@@ -6,6 +6,7 @@ This script does the following:
 """
 
 import re
+import os
 import subprocess
 from pathlib import Path
 
@@ -35,12 +36,13 @@ current_path = Path(__file__).parent.parent
 
 # Build a path to the desired file relative to the script's directory.
 original_videos_folder_path = current_path / original_videos_relative_path
-original_video_name = 'kaaholmen_merd6_2018_11_28_17_00_01.mp4'
-original_video_file_path = original_videos_folder_path / original_video_name
+original_video_file = 'kaaholmen_merd6_2018_11_28_17_00_01.mp4'
+original_video_name = os.path.splitext(original_video_file)[0]
+original_video_file_path = original_videos_folder_path / original_video_file
 
 # Resolution downgrading
-output_video_name = f'{original_video_name}_VGA.mp4'
-output_video_file_path = original_videos_folder_path / output_video_name
+output_video_file = f'{original_video_name}_VGA.mp4'
+output_video_file_path = original_videos_folder_path / output_video_file
 subprocess.run(['ffmpeg', '-i', str(original_video_file_path), '-vf', 'scale=640:480', '-c:a', 'copy', str(output_video_file_path)])
 
 print("\n" + "Downgrading completed." + "\n")

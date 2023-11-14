@@ -48,7 +48,7 @@ def average_value_extractor(cmd_line_output):
 
 # Prepare CSV file
 file_exists = os.path.isfile("data_from_decoding.csv")
-with open('video_quality_metrics.csv', 'w', newline='') as csvfile:
+with open('data_from_decoding.csv', 'w', newline='') as csvfile:
     writer2 = csv.writer(csvfile)
     if not file_exists:
         writer2.writerow(col_names)
